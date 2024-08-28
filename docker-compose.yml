@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  model:
+    build:
+      context: .
+      dockerfile: Dockerfile.model
+    profiles:
+      - model
+    volumes:
+      - ./dogs-vs-cats:/app/dogs-vs-cats
+      - ./models:/app/models
+      - ./runs:/app/runs
+    environment:
+      - CUDA_VISIBLE_DEVICES=0
+    container_name: model_training_container
+
+  tensorboard:
+    image: tensorflow/tensorflow:2.4.1
+    volumes:
+      - ./runs:/app/runs
+    ports:
+      - "6006:6006"
+    container_name: tensorboard_container
+    command: ["tensorboard", "--logdir=/app/runs", "--bind_all"]
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    volumes:
+      - ./models:/app/models
+      - ./images:/app/images
+      - ./csv:/app/csv
+    ports:
+      - "7860:7860"
+    container_name: gradio_web_container

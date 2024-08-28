@@ -1,0 +1,16 @@
+# Dockerfile.tensorboard
+
+# Use a lightweight Python image as the base image
+FROM python:3.8-slim
+
+# Set the working directory
+WORKDIR /app
+
+# Install TensorBoard
+RUN pip install tensorboard
+
+# Expose the TensorBoard port
+EXPOSE 6006
+
+# Run TensorBoard
+ENTRYPOINT ["tensorboard", "--logdir=runs", "--host=0.0.0.0", "--port=6006"]

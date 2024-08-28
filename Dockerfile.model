@@ -1,0 +1,23 @@
+# Use an official PyTorch image as a parent image
+FROM pytorch/pytorch:1.10.0-cuda11.3-cudnn8-runtime
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy the current directory contents into the container at /app
+COPY . /app
+
+# Install any needed packages specified in requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Make the data_setup.py script executable
+RUN chmod +x data_setup.py
+
+# Run the data_setup.py to prepare the dataset
+RUN python data_setup.py
+
+# Make the main.py script executable
+RUN chmod +x main.py
+
+# Set the default command to execute main.py when the container starts
+CMD ["python", "main.py"]
